@@ -1,0 +1,14 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Description for site">
+<meta name="author" content="Author name">
+<meta name="keywords" content="Tags">
+<meta property="og:title" content="Title of site">
+<meta property="og:image" content="http://hotspotchi.ir/wp-content/uploads/2016/02/hotspotchi_8090.png">
+<meta property="og:site_name" content="sitename"/>
+<meta property="og:type" content="website">
+<meta property="og:url" content="http://hotspotchi.ir/">
+<meta property="og:description" content="Description for site">
+
