@@ -14,3 +14,9 @@ p {
 a {
   text-decoration: none;
 }
+a:visited {
+  color: blue;
+}
+hr {
+  color: black;
+}
