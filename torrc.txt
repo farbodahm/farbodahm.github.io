@@ -1,0 +1,25 @@
+#/etc/tor/torrc
+#apt install obfs4proxy
+======================================================
+
+HashedControlPassword 16:872860B76453A77D60CA2BB8C1A7042072093276A3D701AD684053EC4C
+CookieAuthentication 1
+CircuitBuildTimeout 4
+KeepalivePeriod 70
+NewCircuitPeriod 25
+NumEntryGuards 6
+
+UseBridges 1
+
+Bridge obfs4 85.94.163.116:59927 4406293CD5F705A58BE3F0FBDE51728F81F254B7 cert=ewNGvrk/HSid9lhf/SFmd5vPwivydymapuuFeICH8167BfsmYqrxbgzraFeqvcLAhS00Xw iat-mode=0
+Bridge obfs4 194.132.209.50:56411 3F683BF437D00DF76266F7E82E61E5BB5A647DB5 cert=sxtkKVuH2QST2vy664ScKSiOMHdj4MmXnh3G1Gs3f6VUGeFD/nhnRR/CofWL05bEqntHHw iat-mode=0
+Bridge obfs4 83.212.117.231:80 B687A4B74920A7842B676C0C300D7119FB5F7E24 cert=zFJYOZ3hYHN9i9CcYAkbUt1bHG2ZFahEooklUNpP04NSmiGY1IlrUiIMYK3N28Xmn5G7UA iat-mode=0
+Bridge obfs4 104.234.220.21:10309 0B05CD79FD9CE9B952EB7C5E30CB5EDF5A9F0442 cert=REZSarYVMgcrpBh+Sp/kjXj8l7SCPg4AEP7eQgIxaqc6ieSvgBUFqgeifeoGIIsvM0U8Og iat-mode=0
+Bridge obfs4 85.204.50.214:443 0468077578DF762EFEEC1C0E9A0BF519FE52A568 cert=KSd20Z1jq817F43SZq3d2ifx5ps+j6JBDV7c+JIi8TWFgEvXEcx+U+VWQcyLLSFeq0cRPQ iat-mode=0
+Bridge obfs4 194.132.208.72:11558 D84334F9D398497EA4A0979B35C395118DF1EF49 cert=4JFpBWsQZr3AsiR0Ca6tQDTh+1mayCLNJzBxMyrJgRfSSy3tUYtnDEwax6Jisn9wtyETCw iat-mode=0
+
+ClientTransportPlugin obfs4 exec /usr/bin/obfs4proxy
+
+======================================================
+#systemctl restart tor
+#/log/var/log/tor/log
