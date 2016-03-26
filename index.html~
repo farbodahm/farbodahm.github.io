@@ -1,9 +1,12 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
     <title>Config</title>
-    <link rel="icon" href="logo.jpg" type="image/jpeg">
-    <link rel="stylesheet" type="text/css" href="style.css">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet">
   </head>
   <body>
     <h1>Configs</h1>
@@ -17,6 +20,7 @@
     <!-- -------------------------------------- -->
     <h3>Web</h3>
     <a href="./metabox.txt">Metabox</a>
+    <hr>
     <!-- -------------------------------------- -->
     <h3>General</h3>
     <a href="./torrc.txt">Torrc</a>
