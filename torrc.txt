@@ -7,6 +7,8 @@ KeepalivePeriod 70
 NewCircuitPeriod 25
 NumEntryGuards 6
 RunAsDaemon 0
+#ExitNodes {us}
+
 
 UseBridges 1
 
@@ -20,7 +22,7 @@ ClientTransportPlugin obfs4 exec /usr/bin/obfs4proxy
 #systemctl restart tor
 #/log/var/log/tor/log
 ======================================================
-Apparmor problem fix
+#Apparmor problem fix
 #/etc/apparmor.d/abstractions/tor
 #change /usr/bin/obfs4proxy PUx, to /usr/bin/obfs4proxy ix,
 #reboot
