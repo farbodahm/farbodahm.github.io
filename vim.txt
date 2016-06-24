@@ -34,6 +34,11 @@ set wildmenu
 
 " Auto-complete for Php!
 set omnifunc=phpcomplete#CompletePHP
+
+" Display name of opened file in Terminal title
+autocmd BufEnter * let &titlestring = ' ' . expand("%:t")             
+set title
+
 ############################################
 #.vim/colors/monokai.vim
 " Vim color file
