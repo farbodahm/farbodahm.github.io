@@ -1,49 +1,48 @@
 # /etc/nginx/sites-available
 # /etc/nginx/conf.d #file should end with .conf
 #################################################
-##
-# You should look at the following URL's in order to grasp a solid understanding
-# of Nginx configuration files in order to fully unleash the power of Nginx.
-# http://wiki.nginx.org/Pitfalls
-# http://wiki.nginx.org/QuickStart
-# http://wiki.nginx.org/Configuration
-#
-# Generally, you will want to move this file somewhere, and start with a clean
-# file but keep this around for reference. Or just disable in sites-enabled.
-#
-# Please see /usr/share/doc/nginx-doc/examples/ for more detailed examples.
-##
 
-# Web root location & port listening #
 server {
-        listen 80;
-	server_name localhost;
-        root /home/farbod/nginx;
-        index index.php index.html index.htm;
-	charset utf-8;
+	listen 80 default_server;
+	listen [::]:80 default_server;
 
-	# Redirect server error pages to the static page #        
+	root /home/farbod/nginx;
+
+	index index.php index.htm index.nginx-debian.html;
+
+	server_name _;
+
 	location / {
-		try_files $uri $uri/ /index.php;
-		autoindex on;
+		##$args is for wordpress permalinks
+		try_files $uri $uri/ /index.php?$args;
+		
+		##Index available file
+		#autoindex on;
 	}
-	# Pass the PHP scripts to FastCGI server #	
-	location ~ \.php$ {
-		try_files $uri =404;
-		fastcgi_pass 127.0.0.1:9000;
-		fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
-		fastcgi_index index.php;
-		include fastcgi_params;
-	}
-} 
 
-#server {
-#        listen 8080;
-#        server_name localhost:8080;
-#        location / {
-#		proxy_pass http://localhost;
-#        }
-#}
+	## pass the PHP scripts to FastCGI server listening on 127.0.0.1:9000
+	location ~ \.php$ {
+		include snippets/fastcgi-php.conf;
+
+		## With php7.0-cgi alone:
+		#fastcgi_pass 127.0.0.1:9000;
+		## With php7.0-fpm:
+		fastcgi_pass unix:/run/php/php7.0-fpm.sock;
+	}
+
+	location ~ /\.ht {
+		deny all;
+	}
+}
+
+##############################################
+
+#/etc/nginx/nginx.conf
+#Disable server Nginx version
+server_tokens off;
+#Size that user can upload
+client_max_body_size 100m;
+
 ##############################################
 # nginx -t
 # service nginx restart
