@@ -1,5 +1,4 @@
 # /etc/nginx/sites-available
-# /etc/nginx/conf.d #file should end with .conf
 #################################################
 
 server {
