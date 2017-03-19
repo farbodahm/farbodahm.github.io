@@ -2,21 +2,23 @@
 #Rules:
 
 sudo iptables -F
-sudo iptables -P INPUT DROP
-sudo iptables -A INPUT -i lo -p all -j ACCEPT
+sudo iptables -I INPUT 1 -i lo -j ACCEPT
 sudo iptables -A INPUT -m state --state RELATED,ESTABLISHED -j ACCEPT
 
 sudo iptables -A INPUT -p tcp -m tcp --dport 1962 -j ACCEPT 
 sudo iptables -A INPUT -p tcp -m tcp --dport 999 -j ACCEPT 
-sudo iptables -A INPUT -p tcp -m tcp --dport 12020 -j ACCEPT 
 
 sudo iptables -A INPUT -j DROP
 
 #################################################
-#Run after reboot:
+#To run rules after reboot:
 
 sudo iptables-save > /etc/firewall.conf
 sudo vi /etc/network/if-up.d/iptables
 sudo chmod +x /etc/network/if-up.d/iptables
+
+# Or:
+sudo apt-get install iptables-persistent
+sudo invoke-rc.d iptables-persistent save
 
 #################################################
