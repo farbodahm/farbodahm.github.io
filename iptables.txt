@@ -13,12 +13,9 @@ sudo iptables -A INPUT -j DROP
 #################################################
 #To run rules after reboot:
 
-sudo iptables-save > /etc/firewall.conf
-sudo vi /etc/network/if-up.d/iptables
-sudo chmod +x /etc/network/if-up.d/iptables
-
-# Or:
-sudo apt-get install iptables-persistent
-sudo invoke-rc.d iptables-persistent save
+#Save Rull:
+iptables-save > /etc/firewall.conf
+#Reload when reboot (use crontab! in crotab use root user and use the root path!):
+iptables-restore < /etc/firewall.conf
 
 #################################################
