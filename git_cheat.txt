@@ -1,0 +1,27 @@
+git init - Initialize a Git repo
+
+git status - Give status of the Repo
+
+git add FILES - Tells git to track those new files
+
+git reset FILES - Tells git not to track those files
+
+git log --summery - To Give logs with full details 
+
+git remote add origin https://github.com/username/repo - Add url as a remote
+
+git push origin master - Pushing all local commits to remote origin branch master
+
+git pull orogin master - Check for changes and pull down
+
+git diff HEAD - Show changes from our last commit
+
+git checkout -- FILE.TXT - Get rid of all the changes from last commit to FILE.TXT till now
+
+git branch BRANCHNAME - Create new branch
+
+git checkout BRANCHNAME - Switch to that branch
+
+git merge BRANCHNAME - Merge BRANCHNAME into current branch
+
+git branch -d BRANCHNAME - To delete branch
