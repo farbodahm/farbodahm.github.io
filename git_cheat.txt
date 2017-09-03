@@ -18,10 +18,18 @@ git diff HEAD - Show changes from our last commit
 
 git checkout -- FILE.TXT - Get rid of all the changes from last commit to FILE.TXT till now
 
-git branch BRANCHNAME - Create new branch
 
-git checkout BRANCHNAME - Switch to that branch
+## Branchs:
 
-git merge BRANCHNAME - Merge BRANCHNAME into current branch
+git branch - Show current branchs
 
-git branch -d BRANCHNAME - To delete branch
+git branch BRANCHNAME - Create branch 
+
+git branch -m BRANCHNAME NEWBRANCHNAME - Rename the branch
+
+git branch -D BRANCHNAME - Delete the branch
+
+git checkout BRANCHNAME - Switch to the branch
+
+git merge BRANCHNAME - Merge the branch to current branch
+
