@@ -7,11 +7,22 @@
     
     <language>en</language>
     <copyright>Copyright 2025, Calvin Tran</copyright>
-    <lastBuildDate>Mon, 01 Jan 0001 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Tue, 15 Mar 2022 00:00:00 +0000</lastBuildDate>
     <generator>Hugo - gohugo.io</generator>
     <docs>http://cyber.harvard.edu/rss/rss.html</docs>
     <atom:link href="http://localhost:1313//atom.xml" rel="self" type="application/atom+xml"/>
     
+    
+    <item>
+      <title>Example Content</title>
+      <link>http://localhost:1313/posts/example-content/</link>
+      <description>&lt;p&gt;First Post.
+Will be removed.&lt;/p&gt;
+</description>
+      <author>Farbod Ahmadian</author>
+      <guid>http://localhost:1313/posts/example-content/</guid>
+      <pubDate>Tue, 15 Mar 2022 00:00:00 +0000</pubDate>
+    </item>
     
   </channel>
 </rss>
