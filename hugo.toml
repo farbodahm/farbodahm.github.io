@@ -1,0 +1,46 @@
+baseURL = 'https://farbodahm.me/'
+languageCode = 'en-us'
+title = 'farbodahm'
+theme = 'maverick'
+
+[permalinks]
+  pages = "/:slug"
+
+[params]
+  logo = '/assets/favicon.ico'
+  description = "Farbod's Personal Blog"
+  author = 'Farbod Ahmadian'
+  items = 10
+
+  [params.comments]
+    enabled = false
+
+[menu]
+  [[menu.main]]
+    identifier = "about"
+    name = "About"
+    url = "/about/"
+    weight = "-110"
+  [[menu.main]]
+    identifier = "posts"
+    name = "Post"
+    url = "/posts/"
+    weight = -200
+
+[markup]
+  [markup.goldmark.renderer]
+    unsafe = true
+  [markup.highlight]
+    anchorLineNos = false
+    codeFences = true
+    guessSyntax = false
+    hl_Lines = ''
+    hl_inline = false
+    lineAnchors = ''
+    lineNoStart = 1
+    lineNos = false
+    lineNumbersInTable = true
+    noClasses = true
+    noHl = false
+    style = 'monokailight'
+    tabWidth = 4

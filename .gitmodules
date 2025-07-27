@@ -1,0 +1,3 @@
+[submodule "themes/maverick"]
+	path = themes/maverick
+	url = https://github.com/canhtran/maverick.git

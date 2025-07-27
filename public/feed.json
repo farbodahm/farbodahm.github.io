@@ -1,0 +1,19 @@
+{
+  "version": "https://jsonfeed.org/version/1",
+  "title": "Maverick",
+  "home_page_url": "http://localhost:1313/",
+  "feed_url": "http://localhost:1313/feed.json",
+  "description": "A minimal hugo theme focus on content",
+  "favicon": "http://localhost:1313//assets/favicon.ico",
+  "expired": false,
+  "author": {
+    "name": "Calvin Tran",
+    "url": "http://localhost:1313/"
+  },
+  "items": [
+    
+    
+
+    
+  ]
+}
