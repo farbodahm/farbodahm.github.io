@@ -16,3 +16,6 @@ data storage, distributed systems and data processing systems.
 
 I love meeting new people. If you'd like to grab a coffee or chat,  
 feel free to send an email to `farbodahmadian2014` at Gmail and we can set something up. 🙂
+
+*Disclaimer*: I write as a way to focus and clear my mind.
+This blog is mostly a personal brain dump, so posts may cover different topics and aren’t always programming-related.

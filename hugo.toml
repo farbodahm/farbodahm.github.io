@@ -7,7 +7,6 @@ theme = 'maverick'
   pages = "/:slug"
 
 [params]
-  logo = '/assets/favicon.ico'
   description = "Farbod's Personal Blog"
   author = 'Farbod Ahmadian'
   items = 10
