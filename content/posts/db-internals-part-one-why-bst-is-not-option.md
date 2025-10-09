@@ -10,7 +10,7 @@ tags:
 Databases and storage engines are one of my interesting topics to follow
 and recently I started reading [Database Internals](https://www.databass.dev/) while implementing
 one called [VeryLightSQL (VLsql)](https://github.com/farbodahm/verylightsql)
-following steps from [https://cstack.github.io/db_tutorial/](Let's Build a Simple Database).
+following steps from [Let's Build a Simple Database](https://cstack.github.io/db_tutorial/).
 
 So in a blog post series I'm going to capture the important things that I find during my implementations;
 Starting the first one with this idea that why we have so many many different tree data structures and
@@ -26,7 +26,7 @@ delete, insert and search operations.
 In a worst case scenario a BST can become *pathological* which basically means it does not differ from
 a linked list with an O(n) search case.
 
-![pathological](../../assets/pathological-bst.png)
+![pathological](/images/pathological-bst.png)
 
 
 How ever we are talking about storage engines; Which they **persist** and worst case scenarios are important. 
