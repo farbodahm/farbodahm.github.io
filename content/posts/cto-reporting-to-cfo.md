@@ -2,7 +2,8 @@
 author: "Farbod Ahmadian"
 title: "CTO Reporting to CFO"
 date: "2025-07-31"
-tags: 
+description: "Why do CTOs report to CFOs in Tech-Aided companies? Exploring the pattern and its implications for tech teams."
+tags:
 - companies
 - career-path
 ---

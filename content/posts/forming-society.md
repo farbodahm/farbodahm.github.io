@@ -2,7 +2,8 @@
 author: "Farbod Ahmadian"
 title: "Forming a Society"
 date: "2025-08-15"
-tags: 
+description: "How a group trip with majority voting taught me lessons about forming societies and iterative rule-making."
+tags:
 - community
 - philosophy
 ---
