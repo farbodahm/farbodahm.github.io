@@ -2,6 +2,7 @@ baseURL = 'https://farbodahm.me/'
 languageCode = 'en-us'
 title = 'farbodahm'
 theme = 'maverick'
+copyright = 'Farbod Ahmadian'
 
 [permalinks]
   pages = "/:slug"
