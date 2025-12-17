@@ -2,6 +2,7 @@
 author: "Farbod Ahmadian"
 title: "Deployment Strategies: Application Layer VS GitOps"
 date: "2025-12-17"
+description: "Comparing GitOps and Application Layer deployment strategies with Airflow examples. Pros, cons, and when to use each."
 tags:
 - developer-experience
 - airflow

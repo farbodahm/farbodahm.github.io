@@ -2,7 +2,8 @@
 author: "Farbod Ahmadian"
 title: "Database Internals (Part One): Why BST is not an option for storage engines?"
 date: "2025-10-08"
-tags: 
+description: "Why Binary Search Trees don't work for databases: exploring locality, fanout, and tree height problems in storage engines."
+tags:
 - database
 - storage-engine
 ---
