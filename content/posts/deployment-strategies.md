@@ -7,35 +7,32 @@ tags:
 - airflow
 ---
 
-In different projects I have worked with different branching strategies, some famous ones like like
-[Trunk Base Development](https://trunkbaseddevelopment.com/),
+I've worked with different branching strategies:
+[Trunk Based Development](https://trunkbaseddevelopment.com/),
 [Gitflow](https://www.atlassian.com/git/tutorials/comparing-workflows/gitflow-workflow),
-[GitHub Flow](https://docs.github.com/en/get-started/quickstart/github-flow), a combination of both, ... 
+[GitHub Flow](https://docs.github.com/en/get-started/quickstart/github-flow), and mixes of these.
 
-Each of these strategies has its own pros and cons, and the choice of which one to use depends on the specific needs and requirements of the project.
+Each has its pros and cons. The best choice depends on your project.
 
-For the sake of this post, let's call it `Deployment Strategy` as branching strategy is a subset of deployment strategy
-and they are tightly coupled.
+In this post, I'll call it `Deployment Strategy`. Why? Because branching is just one part of how you deploy code. They go hand in hand.
 
 ## What is the pain?
 
-I see many teams on different projects are spending a lot of time on managing branches, spent long time for deployment and
-waiting Git runners to spin up and deploy the artifacts. Also let me add that **Development Experience** is a key factor
-for me and I want to decrease the lead time for developers as much as possible.
+I see many teams waste time on branch management. They wait too long for deployments. Git runners spin up slowly. Builds take forever.
 
-So expect this post to be opinionated toward improving developer experience and reducing lead time.
-For projects needing high level of stability and compliance, this might not be the best approach.
+**Developer Experience** matters a lot to me. I want developers to ship code fast, not wait around.
+
+So yes, this post is opinionated. I favor speed and simplicity. If your project needs strict rules and compliance, this may not fit.
 
 ## GitOps Deployment Strategy
 
-Just to simplify the discussion, let's assume we have **3 main branches** in our repository
-and 4 environments:
+Let's keep it simple. Say we have **4 branches** and **4 environments**:
 - `feature/*`: code deployed to **dev** environment
 - `main`: code deployed to **test** environment
 - `acc`: code deployed to **staging** environment
 - `production`: code deployed to **production** environment
 
-and we have the following deployment flow:
+Here's the deployment flow:
 
 ```mermaid
 flowchart LR
@@ -53,17 +50,18 @@ flowchart LR
 
 ### What are the pains?
 
-- Long lead time for developers: each deployment takes time and developers need to wait for the deployment to finish
-- Complex branching strategy: managing multiple branches can be complex and error-prone
-- Difficult to manage environment-specific configurations: managing different configurations for each environment can be challenging
-- Lack of flexibility: developers may not have the freedom to deploy code as needed, leading to delays and frustration
-- We can't deploy only specific part of the codebase, e.g., only DAGs in Airflow
-  - If we want to do so, we need to have a separate logic for deploying only the part we want which adds more complexity
+- **Slow deployments**: Each deploy takes time. Developers wait a lot.
+- **Too many branches**: Hard to manage. Easy to make mistakes.
+- **Config mess**: Each environment needs different settings. That's tricky to handle.
+- **No flexibility**: developers may not have the freedom to deploy code as needed, leading to delays and frustration.
+- **All or nothing**: You can't deploy just one part (like only one DAG in Airflow). If you want to deploy to `staging`, you deploy everything in that branch.
+  - Want to deploy just one piece? You need extra logic. More complexity.
 
-### Example: Airflow DAG Deployment 
+### Example: Airflow DAG Deployment
 
-Let's say we have an Airflow project and we want to deploy our DAGs using GitOps strategy.
-We can have a Git repository with the following structure:
+Let's say we have an Airflow project. We want to deploy DAGs using GitOps.
+
+Here's a typical repo structure:
 
 ```
 airflow-dags-repo/
@@ -76,7 +74,7 @@ airflow-dags-repo/
 └── ...
 ```
 
-And that's how a DAG will look like:
+A DAG might look like this:
 
 ```python
 PROJECT_ID = "project-{{ var.value.env_id }}-111"
@@ -97,24 +95,28 @@ with DAG(
     ...
 ```
 
-When a developer wants to deploy a new DAG or update an existing one, they would create a new branch
-from `feature/*`, make their changes, and then create a pull request to merge their changes into the `main` branch.
-Once the pull request is approved and merged, GitOps will automatically deploy the changes to the **test** environment.
-The same process would be followed for promoting changes to **staging** and **production** environments.
+How does a developer deploy a new DAG?
 
-So in this example, we are deploying this same code to different envs and we are relying on [Airflow Variables](https://airflow.apache.org/docs/apache-airflow/stable/core-concepts/variables.html)
-to manage environment-specific configurations.
+1. Create a branch from `feature/*`
+2. Make changes
+3. Open a PR to `main`
+4. Get it approved and merged
+5. GitOps deploys to **test**
+
+Same flow for **staging** and **production**. Merge up the chain.
+
+Notice: we deploy the same code to all environments. We use [Airflow Variables](https://airflow.apache.org/docs/apache-airflow/stable/core-concepts/variables.html) to handle environment-specific settings in this example.
 
 
 ## Application Layer Deployment Strategy
 
-In this strategy, we decouple the deployment process from the Git branching strategy.
+Here's a different approach. We separate deployment from branching.
 
-Let's see what do I mean Application Layer Deployment Strategy by revisiting the previous example.
+What does that mean? Let me show you with the same Airflow example.
 
-### Same Airflow Dag Deployment Example
+### Same Airflow DAG Deployment Example
 
-Let's say we have the same Airflow project as before, but this time we have to define our dags like this:
+Same project. But now we define DAGs like this:
 
 ```python
 env_config = get_environment_details()
@@ -173,17 +175,16 @@ match env_config.environment_name:
         )
 ```
 
-In this example, we only have one main branch (`main`) and as soon as a feature branch is merged into `main`,
-the code is automatically deployed to all environments (**dev**, **test**, **staging**, and **production**)
-depending on wheter the deployment to that environment is specified in the configuration.
+In this setup, we only have one main branch: `main`.
+
+When you merge a feature branch into `main`, code goes to all environments at once. Dev, test, staging, production. ONLY if the configuration is set in the application code.
 
 ### What are the benefits?
 
-- Now deployment to all envs happen at the same time, so you don't need to wait for each deployment to finish individually and in sequence.
-  - Yeah it depends whether you are defining all envs in same PR or not.
-- Simpler branching strategy.
-- Flexibility to change configurations for each environment in the code itself and in one single source of truth.
-You can also check what is the latest state of deployed code easily.
+- **Fast**: All environments deploy at once. No waiting in line.
+  - (This depends on how you set up your PR. But it can be fast.)
+- **Simple branching**: Just one main branch. Less mess.
+- **One source of truth**: All config lives in the code. Easy to see what's deployed where.
 
 ```mermaid
 flowchart LR
@@ -198,12 +199,17 @@ flowchart LR
 
 ### What are the pains?
 
-Most of the things I mentioned in GitOps strategy are resolved here, but there are still some challenges:
+This fixes most GitOps problems. But it's not perfect:
 
-- It may not be possible to have Application Layer strategy for all projects, it depends on the project requirements and constraints.
-- If you only have 1 dev environment, it may be challenging to deploy multiple features at the same time without conflicts.
- - This is flexible and can be managed depending on how big the team is and project requirements. You can have multiple dev environments if needed
- or deploy only changed parts of the codebase.
+- **Not for everyone**: Some projects can't use this. It depends on your setup & if your project allows it to have application layer deployment.
+- **Dev environment conflicts**: If you have one dev environment and many developers, they might step on each other.
+  - Fix: You can have multiple dev environments if project and team requirements allow.
+  Or only deploy the changes; But ofcourse each comes with its own complexity.
 
-Again, choosing the right deployment strategy depends on the specific needs and requirements of the project.
-It's important to evaluate the pros and cons of each strategy and choose the one that best fits the project's goals and objectives.
+## Conclusion
+
+There's no perfect answer. Pick what fits your project.
+
+Think about your team size. Think about how fast you need to ship. Think about how much risk you can take.
+
+Then choose.
