@@ -20,12 +20,17 @@ copyright = 'Farbod Ahmadian'
     identifier = "about"
     name = "About"
     url = "/about/"
-    weight = "-110"
+    weight = -110
   [[menu.main]]
     identifier = "posts"
     name = "Post"
     url = "/posts/"
     weight = -200
+  [[menu.main]]
+    identifier = "rss"
+    name = "RSS"
+    url = "/index.xml"
+    weight = -150
 
 [markup]
   [markup.goldmark.renderer]
