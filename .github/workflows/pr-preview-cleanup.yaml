@@ -1,0 +1,19 @@
+name: PR Preview Cleanup
+
+on:
+  pull_request:
+    types: [closed]
+
+jobs:
+  cleanup:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install surge
+        run: npm install -g surge
+
+      - name: Teardown surge preview
+        env:
+          SURGE_LOGIN: ${{ secrets.SURGE_LOGIN }}
+          SURGE_TOKEN: ${{ secrets.SURGE_TOKEN }}
+        run: |
+          surge teardown https://farbodahm-pr-${{ github.event.pull_request.number }}.surge.sh || true
