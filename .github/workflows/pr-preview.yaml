@@ -117,13 +117,13 @@ jobs:
       - name: Install Muffet
         run: go install github.com/raviqqe/muffet/v2@latest
 
-      - name: Install Broken Link Checker
-        run: go install github.com/hashicorp/broken-link-checker@latest
-
       - name: Run Broken Link Checker
-        run: broken-link-checker https://farbodahm-pr-${{ github.event.pull_request.number }}.surge.sh/
-        env:
-          VERBOSE: "true"
-          MAX_CONNECTIONS: "5"
-          TIMEOUT_SECONDS: "30"
-          EXCLUSIONS: "linkedin.com,facebook.com,twitter.com,x.com"
+        run: |
+          muffet https://farbodahm-pr-${{ github.event.pull_request.number }}.surge.sh/ \
+            --buffer-size 16384 \
+            --max-connections 5 \
+            --timeout 30 \
+            --exclude 'linkedin.com' \
+            --exclude 'facebook.com' \
+            --exclude 'twitter.com' \
+            --exclude 'x.com'
