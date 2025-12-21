@@ -104,3 +104,26 @@ jobs:
                 body: body
               });
             }
+
+  check_links:
+    needs: preview
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: "1.22"
+
+      - name: Install Muffet
+        run: go install github.com/raviqqe/muffet/v2@latest
+
+      - name: Install Broken Link Checker
+        run: go install github.com/hashicorp/broken-link-checker@latest
+
+      - name: Run Broken Link Checker
+        run: broken-link-checker https://farbodahm-pr-${{ github.event.pull_request.number }}.surge.sh/
+        env:
+          VERBOSE: "true"
+          MAX_CONNECTIONS: "5"
+          TIMEOUT_SECONDS: "30"
+          EXCLUSIONS: "linkedin.com,facebook.com,twitter.com,x.com"
