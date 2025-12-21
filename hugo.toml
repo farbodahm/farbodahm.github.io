@@ -17,11 +17,6 @@ copyright = 'Farbod Ahmadian'
 
 [menu]
   [[menu.main]]
-    identifier = "about"
-    name = "About"
-    url = "/about/"
-    weight = -110
-  [[menu.main]]
     identifier = "posts"
     name = "Post"
     url = "/posts/"
