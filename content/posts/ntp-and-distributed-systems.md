@@ -5,6 +5,7 @@ date: "2025-12-26"
 description: "Exploring the limitations of NTP in distributed systems and why logical clocks like Lamport Timestamps and Vector Clocks are essential for ordering events."
 tags:
 - distributed-systems
+- algorithms
 ---
 
 This blog post is here to encourage you to understand how [NTP](https://sookocheff.com/post/time/how-does-ntp-work/) works and why you shouldn't take time synchronization for granted in distributed systems.
