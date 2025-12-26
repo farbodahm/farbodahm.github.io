@@ -6,6 +6,7 @@ description: "Why Binary Search Trees don't work for databases: exploring locali
 tags:
 - database
 - storage-engine
+- algorithms
 ---
 
 Recently I started reading [Database Internals](https://www.databass.dev/) while implementing

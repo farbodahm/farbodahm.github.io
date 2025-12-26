@@ -5,6 +5,7 @@ data storage, distributed systems and data processing systems.
 
 ## Recently
 - I'm working on a stream processor called [Streame](https://github.com/farbodahm/streame)
+- Slowly working on ["Let's Build a Simple Database"](https://cstack.github.io/db_tutorial/) called [VeryLightSQL](https://github.com/farbodahm/verylightsql) and adding features to it like transactions, benchmarks, making it distributed, ...
 - Completed ["Build your own Redis by Codecrafters"](https://github.com/farbodahm/codecrafters-redis-go)
 - Completed ["Build your own BitTorrent by Codecrafters"](https://github.com/farbodahm/codecrafters-bittorrent-go)
 - ...and a few other things you can find on my Github.
@@ -17,5 +18,8 @@ data storage, distributed systems and data processing systems.
 I love meeting new people. If you'd like to grab a coffee or chat,  
 feel free to send an email to `farbodahmadian2014` at Gmail and we can set something up. 🙂
 
-*Disclaimer*: I write as a way to focus and clear my mind.
-This blog is mostly a personal brain dump, so posts may cover different topics and aren’t always programming-related.
+## Disclaimer
+
+- I write as a way to focus and clear my mind.
+- This blog is mostly a personal brain dump, so posts may cover different topics and aren’t always programming-related.
+- I try to *not use any LLMs* to write my posts; however, I may use them for grammar and spelling checks.
