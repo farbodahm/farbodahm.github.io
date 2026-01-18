@@ -1,7 +1,7 @@
 ---
 author: "Farbod Ahmadian"
 title: "Database Internals (Part Two): The Real Cost of Type Safety in Storage Engines"
-date: "2025-01-18"
+date: "2026-01-18"
 description: "Exploring the trade-off between unsafe pointer arithmetic and type-safe serialization in B-Tree storage engines, with real benchmark numbers."
 tags:
 - database
