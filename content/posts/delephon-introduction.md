@@ -9,11 +9,15 @@ tags:
 - database
 ---
 
-At work, I constantly switch between GCP projects. One minute I'm checking a table in the production project, the next I need to compare it with staging, then jump to a completely different team's project to debug a data pipeline. On any given day I might touch ten or fifteen different projects.
+At work, I constantly switch between GCP projects. One minute I'm checking a table in the production project, the next I need to compare it with staging, then jump to a completely different team's project to debug a data pipeline.
+On any given day I might touch six or seven different projects.
 
-The BigQuery web console doesn't handle this well. Switching projects requires multiple clicks through a dropdown. Searching for a table across projects isn't really a thing. Opening a new tab means waiting a few seconds for everything to reload. When your workflow involves jumping between projects every few minutes, these small friction points turn the web UI into a real productivity drain.
+The BigQuery web console doesn't handle this well. Switching projects requires multiple clicks through a dropdown.
+There's no way to search for a table if you don't remember which project it's in.
+Opening a new tab means waiting a few seconds for everything to reload.
+When your workflow involves jumping between projects every few minutes, these small friction points turn the web UI into a real productivity drain.
 
-I kept thinking: I just want to type a table name and get to it, regardless of which project it's in.
+I looked at existing tools like DBeaver and Beekeeper Studio, but their community editions didn't support BigQuery well enough for this workflow.
 
 So I built [Delephon](https://github.com/farbodahm/delephon).
 
