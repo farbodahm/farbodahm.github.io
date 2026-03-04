@@ -7,6 +7,7 @@ tags:
 - golang
 - benchmarking
 - performance
+- kata
 ---
 
 In [Part One](/posts/reading-go-benchmark-output-memory), we learned how to read Go benchmark output: what `ns/op`, `B/op`, iterations, and `GOMAXPROCS` mean.
@@ -71,9 +72,9 @@ Duration: 1.80s, Total samples = 5.46s (302.88%)
 
 Three values:
 
-- **Duration: 1.80s** — wall-clock time the benchmark ran
-- **Total samples: 5.46s** — sum of CPU time across *all cores*
-- **302.88%** — Total samples / Duration. This tells you CPU utilization
+- **Duration: 1.80s**: wall-clock time the benchmark ran
+- **Total samples: 5.46s**: sum of CPU time across *all cores*
+- **302.88%**: Total samples / Duration. This tells you CPU utilization
 
 The percentage is key. **302%** means the benchmark used about 3 out of 10 available cores on average. The other 7 cores were mostly idle.
 
@@ -97,15 +98,15 @@ Every row in the `pprof -top` output has two important metrics: **flat** and **c
      0.26s  4.76% 90.11%      1.10s 20.15%  internal/sync.(*Mutex).lockSlow
 ```
 
-- **flat (0.26s)** — time spent *directly executing code in that function*, not counting anything it calls
-- **cum (1.10s)** — time spent *in that function plus everything it calls*
+- **flat (0.26s)**: time spent *directly executing code in that function*, not counting anything it calls
+- **cum (1.10s)**: time spent *in that function plus everything it calls*
 
 Think of it this way: if `lockSlow` calls `runtime.usleep` internally, the time spent sleeping counts toward `lockSlow`'s **cum** but not its **flat**. The flat time of `usleep` only shows up on `usleep`'s own row.
 
 There are also percentage columns:
-- **flat%** — flat time as percentage of total samples
-- **cum%** — cumulative time as percentage of total samples
-- **sum%** — running total of flat% as you go down the list. Useful to see how much the top N functions account for
+- **flat%**: flat time as percentage of total samples
+- **cum%**: cumulative time as percentage of total samples
+- **sum%**: running total of flat% as you go down the list. Useful to see how much the top N functions account for
 
 ## Reading the 1-Shard Profile: A Contention Story
 
@@ -120,9 +121,9 @@ Now let's actually read the 1-shard profile. The top 3 functions by flat time:
 
 What are these functions?
 
-- **`runtime.usleep`** — goroutine sleeping, waiting to be woken up
-- **`runtime.pthread_cond_wait`** — OS-level blocking. A goroutine is parked, waiting for a mutex to become available
-- **`runtime.pthread_cond_signal`** — waking up a blocked goroutine after a mutex is released
+- **`runtime.usleep`**: goroutine sleeping, waiting to be woken up
+- **`runtime.pthread_cond_wait`**: OS-level blocking. A goroutine is parked, waiting for a mutex to become available
+- **`runtime.pthread_cond_signal`**: waking up a blocked goroutine after a mutex is released
 
 **85% of CPU time is spent on lock synchronization.** Goroutines are sleeping, waiting, and signaling each other. That's not useful work.
 
@@ -145,8 +146,8 @@ If you sort by cumulative instead (`pprof -top -cum`), the picture is even clear
 
 `Set()` consumes 67.77% of cumulative time. But `Set` itself has 0 flat time; it doesn't do anything directly. It just calls `Lock`, the map assignment, and `Unlock`. And of those:
 
-- `RWMutex.Unlock` takes **45.79%** cumulative — almost half of all CPU time just releasing the lock
-- `Mutex.Lock` takes **20.70%** cumulative — acquiring the lock
+- `RWMutex.Unlock` takes **45.79%** cumulative: almost half of all CPU time just releasing the lock
+- `Mutex.Lock` takes **20.70%** cumulative: acquiring the lock
 
 Together, lock acquire and release account for **66% of CPU time**. The actual work (assigning a value in the map) is a rounding error.
 
@@ -209,10 +210,10 @@ ROUTINE ======================== (*ShardedMap[...]).Set
 
 Reading this line by line:
 
-- **Line 5** (`shardIndex`): 10ms — computing the hash is almost free
-- **Line 6** (`Lock`): 1.13s — acquiring the lock takes **30% of the function's time**
-- **Line 9** (map write): 60ms — the actual work
-- **Line 10** (closing brace): 2.50s — this is where `defer Unlock()` runs, **67% of the function's time**
+- **Line 5** (`shardIndex`): 10ms: computing the hash is almost free
+- **Line 6** (`Lock`): 1.13s: acquiring the lock takes **30% of the function's time**
+- **Line 9** (map write): 60ms: the actual work
+- **Line 10** (closing brace): 2.50s: this is where `defer Unlock()` runs, **67% of the function's time**
 
 The `defer m.locks[index].Unlock()` on line 48 doesn't show time; the deferred call executes at the function return on line 51. That's why line 51 has 2.50s.
 
@@ -239,7 +240,7 @@ The numbers tell the same story from a different angle: less contention means mo
 
 ## Visualizing the Profile with pprof -svg
 
-Text output is precise but hard to scan. A visual call graph shows you the full picture at a glance.
+A visual call graph shows you the full picture at a glance.
 
 Generate one with:
 
@@ -261,9 +262,11 @@ Let's break down how to read it.
 
 **Arrows** are function calls. The label on each arrow shows how much time flows through that call. Thicker arrows mean more time. Follow the thick arrows from top to bottom and you trace the hot path.
 
-**The hot path**: Start at `testing.(*B).RunParallel.func1` at the top (3.58s). It calls `benchmarkShardedSet.func1` (3.58s), which calls `Set` (3.70s). From `Set`, the thick arrows fan out to `sync.(*RWMutex).Unlock` (2.50s) and `sync.(*RWMutex).Lock` (1.13s). A thin arrow goes to `runtime.mapassign_fast64` (0.07s) — the actual map write. The arrow thickness tells the story visually: the lock operations dwarf the useful work.
+**The hot path**: Start at `testing.(*B).RunParallel.func1` at the top (3.58s). It calls `benchmarkShardedSet.func1` (3.58s), which calls `Set` (3.70s). From `Set`, the thick arrows fan out to `sync.(*RWMutex).Unlock` (2.50s) and `sync.(*RWMutex).Lock` (1.13s). A thin arrow goes to `runtime.mapassign_fast64` (0.07s), the actual map write.
+The arrow thickness tells the story visually: the lock operations are much larger than the useful work.
 
-From Lock and Unlock, the arrows flow down through `internal/sync.(*Mutex).lockSlow` (1.10s cum) and eventually into the big red boxes: `usleep`, `pthread_cond_wait`, and `pthread_cond_signal`. This is where goroutines are parked waiting for the single mutex.
+From Lock and Unlock, the arrows flow down through `internal/sync.(*Mutex).lockSlow` (1.10s cum) and eventually into the big red boxes: `usleep`, `pthread_cond_wait`, and `pthread_cond_signal`.
+This is where goroutines are parked waiting for the single mutex.
 
 ### The 64-Shard Graph
 
@@ -271,10 +274,10 @@ Now compare with the 64-shard graph:
 
 {{< scrollable-svg src="/images/pprof-64shards.svg" alt="pprof call graph for 64-shard benchmark showing reduced lock contention" height="500px" >}}
 
-The structure is different. The dominant box is `runtime.usleep` (5.90s, 69.49%) — but this is mostly idle scheduler threads, not contention. You can tell because:
+The structure is different. The dominant box is `runtime.usleep` (5.90s, 69.49%) but this is mostly idle scheduler threads, not contention. You can tell because:
 
 1. The arrows leading to `usleep` come from `runtime.schedule` and `runtime.findRunnable` (the Go scheduler looking for work), not from mutex operations
-2. `lockSlow` is barely visible in the graph — it's a tiny box compared to the 1-shard version
+2. `lockSlow` is barely visible in the graph. It's a tiny box compared to the 1-shard version
 3. `mapassign_fast64` (0.12s) appears as a visible box now, showing that real work is actually happening
 
 The `Set` function (4.62s cum) still takes significant cumulative time, but more of it flows into actual map operations (0.22s) rather than lock waiting. The `sync.(*Mutex).Lock` box (0.36s flat, 0.64s cum) is much smaller than in the 1-shard graph (where it was 0.01s flat but 1.14s cum via `RWMutex.Lock`).
@@ -285,7 +288,7 @@ A few patterns to look for:
 
 - **Large red boxes at the bottom** usually indicate leaf functions where time is actually spent (sleeping, spinning, computing)
 - **Many thick arrows converging** on a single node signals a bottleneck
-- **Thin arrows to small boxes** are functions that barely register — they're not your problem
+- **Thin arrows to small boxes** are functions that barely register. They're not your problem!
 - **Wide fan-out from a node** (one function calling many others) suggests the function is an orchestrator; look at its children to find the real cost
 
 ## Other pprof Modes

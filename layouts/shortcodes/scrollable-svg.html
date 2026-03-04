@@ -8,25 +8,26 @@
     <a href="{{ .Get "src" }}" target="_blank" rel="noopener" style="margin-left: auto; font-size: 12px; color: #666; text-decoration: none;" title="Open in new tab">&#x2197; Open full size</a>
   </div>
   <div data-svg-scroll="{{ $uid }}" style="max-height: {{ with .Get "height" }}{{ . }}{{ else }}500px{{ end }}; overflow: auto; background: white;">
-    <img data-svg-img="{{ $uid }}" src="{{ .Get "src" }}" alt="{{ .Get "alt" }}" style="display: block;" />
+    <img data-svg-img="{{ $uid }}" src="{{ .Get "src" }}" alt="{{ .Get "alt" }}" style="display: block; max-width: none !important;" />
   </div>
 </div>
 <script>
 (function() {
   var img = document.querySelector('[data-svg-img="{{ $uid }}"]');
   var label = document.querySelector('[data-svg-label="{{ $uid }}"]');
+  var scroll = document.querySelector('[data-svg-scroll="{{ $uid }}"]');
   var scale = 100;
   var baseWidth = 0;
 
   function init() {
-    baseWidth = img.parentElement.offsetWidth;
+    baseWidth = scroll.clientWidth;
     img.style.width = baseWidth + 'px';
   }
 
   if (img.complete) { init(); } else { img.addEventListener('load', init); }
   window.addEventListener('resize', function() {
     if (scale === 100) {
-      baseWidth = img.parentElement.offsetWidth;
+      baseWidth = scroll.clientWidth;
       img.style.width = baseWidth + 'px';
     }
   });
@@ -36,7 +37,6 @@
       var action = btn.getAttribute('data-zoom');
       if (action === 'reset') {
         scale = 100;
-        baseWidth = img.parentElement.offsetWidth;
         img.style.width = baseWidth + 'px';
       } else if (action === 'in') {
         scale = Math.round(scale * 1.25);

@@ -7,6 +7,7 @@ tags:
 - golang
 - benchmarking
 - performance
+- kata
 ---
 
 A year ago when I started to learn about benchmarking in Go, I couldn't find an easy-to-follow guide that also included the small details.
@@ -131,8 +132,8 @@ If someone runs this on an `amd64` Linux machine, they'll get different numbers.
 Look at: `BenchmarkSet_1Shard-10`
 
 This has two parts:
-- **`BenchmarkSet_1Shard`** — the function name, exactly as you wrote it in Go
-- **`-10`** — the value of `GOMAXPROCS`, meaning Go used 10 OS threads for parallelism
+- **`BenchmarkSet_1Shard`**: the function name, exactly as you wrote it in Go
+- **`-10`**: the value of `GOMAXPROCS`, meaning Go used 10 OS threads for parallelism
 
 My M1 Pro has 10 cores (8 performance + 2 efficiency), so `GOMAXPROCS` defaults to 10.
 If you run this on a 4-core machine, you'd see `-4` instead.
@@ -218,8 +219,8 @@ These appear because we passed `-benchmem`:
 BenchmarkSet_1Shard-10    ... 0 B/op    0 allocs/op
 ```
 
-- **`B/op`** — bytes allocated on the **heap** per operation
-- **`allocs/op`** — number of distinct **heap** allocations per operation
+- **`B/op`**: bytes allocated on the **heap** per operation
+- **`allocs/op`**: number of distinct **heap** allocations per operation
 
 Both are `0` here. That's exactly what the kata asks for: "Zero Allocation Hot-Path."
 
@@ -233,10 +234,10 @@ That means each operation allocated 48 bytes across 2 heap allocations.
 At high throughput (the kata scenario is 50k+ RPS), those allocations create garbage collector pressure and eventually slow you down.
 
 Common sources of allocations in Go:
-- `[]byte(myString)` — converting a string to bytes allocates a copy
-- `fmt.Sprintf(...)` — allocates the resulting string
-- `interface{}` boxing — wrapping a concrete type in an interface can allocate
-- `fnv.New64a()` — creates a new hasher on the heap each call
+- `[]byte(myString)`: converting a string to bytes allocates a copy
+- `fmt.Sprintf(...)`: allocates the resulting string
+- `interface{}` boxing: wrapping a concrete type in an interface can allocate
+- `fnv.New64a()`: creates a new hasher on the heap each call
 
 The last two are relevant to this kata. If you used `hash/fnv` with `New64a()` in the hot path, you'd see allocations show up here.
 
