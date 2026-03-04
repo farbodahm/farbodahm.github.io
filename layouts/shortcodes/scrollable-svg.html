@@ -1,0 +1,52 @@
+{{ $uid := delimit (shuffle (seq 1 9)) "" | truncate 8 "" }}
+<div style="position: relative; border: 1px solid #ddd; border-radius: 4px; margin: 1.5em 0;">
+  <div style="display: flex; gap: 4px; padding: 6px 8px; background: #f5f5f5; border-bottom: 1px solid #ddd; border-radius: 4px 4px 0 0; align-items: center;">
+    <button data-svg-target="{{ $uid }}" data-zoom="in" style="padding: 2px 10px; cursor: pointer; border: 1px solid #ccc; border-radius: 3px; background: white; font-size: 16px; line-height: 1.4;">+</button>
+    <button data-svg-target="{{ $uid }}" data-zoom="out" style="padding: 2px 10px; cursor: pointer; border: 1px solid #ccc; border-radius: 3px; background: white; font-size: 16px; line-height: 1.4;">&minus;</button>
+    <button data-svg-target="{{ $uid }}" data-zoom="reset" style="padding: 2px 8px; cursor: pointer; border: 1px solid #ccc; border-radius: 3px; background: white; font-size: 13px; line-height: 1.6;">Reset</button>
+    <span data-svg-label="{{ $uid }}" style="margin-left: 8px; font-size: 12px; color: #888;">100%</span>
+    <a href="{{ .Get "src" }}" target="_blank" rel="noopener" style="margin-left: auto; font-size: 12px; color: #666; text-decoration: none;" title="Open in new tab">&#x2197; Open full size</a>
+  </div>
+  <div data-svg-scroll="{{ $uid }}" style="max-height: {{ with .Get "height" }}{{ . }}{{ else }}500px{{ end }}; overflow: auto; background: white;">
+    <img data-svg-img="{{ $uid }}" src="{{ .Get "src" }}" alt="{{ .Get "alt" }}" style="display: block;" />
+  </div>
+</div>
+<script>
+(function() {
+  var img = document.querySelector('[data-svg-img="{{ $uid }}"]');
+  var label = document.querySelector('[data-svg-label="{{ $uid }}"]');
+  var scale = 100;
+  var baseWidth = 0;
+
+  function init() {
+    baseWidth = img.parentElement.offsetWidth;
+    img.style.width = baseWidth + 'px';
+  }
+
+  if (img.complete) { init(); } else { img.addEventListener('load', init); }
+  window.addEventListener('resize', function() {
+    if (scale === 100) {
+      baseWidth = img.parentElement.offsetWidth;
+      img.style.width = baseWidth + 'px';
+    }
+  });
+
+  document.querySelectorAll('[data-svg-target="{{ $uid }}"]').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      var action = btn.getAttribute('data-zoom');
+      if (action === 'reset') {
+        scale = 100;
+        baseWidth = img.parentElement.offsetWidth;
+        img.style.width = baseWidth + 'px';
+      } else if (action === 'in') {
+        scale = Math.round(scale * 1.25);
+        img.style.width = Math.round(baseWidth * scale / 100) + 'px';
+      } else if (action === 'out') {
+        scale = Math.max(25, Math.round(scale * 0.8));
+        img.style.width = Math.round(baseWidth * scale / 100) + 'px';
+      }
+      label.textContent = scale + '%';
+    });
+  });
+})();
+</script>

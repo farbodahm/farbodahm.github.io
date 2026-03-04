@@ -237,9 +237,58 @@ Lock acquisition dropped from 1.13s to **840ms**. Map write went from 60ms to **
 
 The numbers tell the same story from a different angle: less contention means more time doing real work.
 
-## Other pprof Modes
+## Visualizing the Profile with pprof -svg
 
-Beyond `-top` and `-list`, pprof has a few other modes worth knowing about.
+Text output is precise but hard to scan. A visual call graph shows you the full picture at a glance.
+
+Generate one with:
+
+```bash
+go tool pprof -svg -nodefraction=0.01 cpu_1shard.prof > profile_1shard.svg
+```
+
+The `-nodefraction=0.01` flag drops functions that account for less than 1% of total CPU time. Without it, pprof includes every tiny function and the graph becomes unreadable. Adjust the threshold depending on how much detail you want.
+
+### The 1-Shard Graph
+
+Here's the call graph for the 1-shard benchmark:
+
+{{< scrollable-svg src="/images/pprof-1shard.svg" alt="pprof call graph for 1-shard benchmark showing most time spent in lock contention" height="500px" >}}
+
+Let's break down how to read it.
+
+**Boxes** are functions. Each box shows the function name, flat time, and cumulative time. Bigger and more red a box is, the more CPU time it consumed. The three largest boxes at the bottom are `runtime.usleep` (2.18s, 39.93%), `runtime.pthread_cond_wait` (1.64s, 30.04%), and `runtime.pthread_cond_signal` (0.84s, 15.38%). These are the lock contention functions we saw in `-top`.
+
+**Arrows** are function calls. The label on each arrow shows how much time flows through that call. Thicker arrows mean more time. Follow the thick arrows from top to bottom and you trace the hot path.
+
+**The hot path**: Start at `testing.(*B).RunParallel.func1` at the top (3.58s). It calls `benchmarkShardedSet.func1` (3.58s), which calls `Set` (3.70s). From `Set`, the thick arrows fan out to `sync.(*RWMutex).Unlock` (2.50s) and `sync.(*RWMutex).Lock` (1.13s). A thin arrow goes to `runtime.mapassign_fast64` (0.07s) — the actual map write. The arrow thickness tells the story visually: the lock operations dwarf the useful work.
+
+From Lock and Unlock, the arrows flow down through `internal/sync.(*Mutex).lockSlow` (1.10s cum) and eventually into the big red boxes: `usleep`, `pthread_cond_wait`, and `pthread_cond_signal`. This is where goroutines are parked waiting for the single mutex.
+
+### The 64-Shard Graph
+
+Now compare with the 64-shard graph:
+
+{{< scrollable-svg src="/images/pprof-64shards.svg" alt="pprof call graph for 64-shard benchmark showing reduced lock contention" height="500px" >}}
+
+The structure is different. The dominant box is `runtime.usleep` (5.90s, 69.49%) — but this is mostly idle scheduler threads, not contention. You can tell because:
+
+1. The arrows leading to `usleep` come from `runtime.schedule` and `runtime.findRunnable` (the Go scheduler looking for work), not from mutex operations
+2. `lockSlow` is barely visible in the graph — it's a tiny box compared to the 1-shard version
+3. `mapassign_fast64` (0.12s) appears as a visible box now, showing that real work is actually happening
+
+The `Set` function (4.62s cum) still takes significant cumulative time, but more of it flows into actual map operations (0.22s) rather than lock waiting. The `sync.(*Mutex).Lock` box (0.36s flat, 0.64s cum) is much smaller than in the 1-shard graph (where it was 0.01s flat but 1.14s cum via `RWMutex.Lock`).
+
+### Reading Tips for pprof Graphs
+
+A few patterns to look for:
+
+- **Large red boxes at the bottom** usually indicate leaf functions where time is actually spent (sleeping, spinning, computing)
+- **Many thick arrows converging** on a single node signals a bottleneck
+- **Thin arrows to small boxes** are functions that barely register — they're not your problem
+- **Wide fan-out from a node** (one function calling many others) suggests the function is an orchestrator; look at its children to find the real cost
+
+## Other pprof Modes
 
 ### Interactive Mode
 
@@ -250,16 +299,6 @@ go tool pprof cpu_1shard.prof
 ```
 
 This opens a `(pprof)` prompt where you can run commands like `top`, `list`, `web`, and more. Useful for exploration when you don't know what you're looking for yet.
-
-### SVG Graph
-
-Generate a visual call graph:
-
-```bash
-go tool pprof -svg cpu_1shard.prof > profile.svg
-```
-
-This creates an SVG showing the call tree with box sizes proportional to CPU time. Big boxes = hot spots. Thick arrows = expensive call paths. It's good for getting a quick overview of where time flows.
 
 ### Web UI
 
