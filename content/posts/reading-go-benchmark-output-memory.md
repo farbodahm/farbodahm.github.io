@@ -1,7 +1,7 @@
 ---
 author: "Farbod Ahmadian"
 title: "Reading Go Benchmark Output (Part One): Memory"
-date: "2026-03-04"
+date: "2026-03-03"
 description: "A practical guide to reading and understanding every field in Go benchmark output, with real examples from a concurrent sharded map implementation."
 tags:
 - golang
