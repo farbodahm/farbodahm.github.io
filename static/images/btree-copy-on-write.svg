@@ -1,0 +1,125 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 460" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif">
+  <defs>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="130%">
+      <feDropShadow dx="0" dy="2" stdDeviation="2" flood-color="#0f172a" flood-opacity="0.08"/>
+    </filter>
+    <marker id="arr-old" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#cbd5e1"/>
+    </marker>
+    <marker id="arr-new" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#6366f1"/>
+    </marker>
+    <marker id="arr-shared" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#10b981"/>
+    </marker>
+  </defs>
+
+  <!-- Old edges (v1 root and A) -->
+  <g fill="none" stroke="#cbd5e1" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#arr-old)">
+    <path d="M 180 100 L 135 170"/>
+    <path d="M 180 100 C 280 130, 480 140, 595 170"/>
+    <path d="M 135 224 L 75 300"/>
+    <path d="M 135 224 L 215 300"/>
+  </g>
+
+  <!-- New edges (v2 root and A') -->
+  <g fill="none" stroke="#6366f1" stroke-width="2" marker-end="url(#arr-new)">
+    <path d="M 520 100 L 325 170"/>
+    <path d="M 520 100 L 595 170"/>
+    <path d="M 325 224 C 250 250, 130 280, 75 300"/>
+    <path d="M 325 224 L 355 300"/>
+  </g>
+
+  <!-- Shared edges (from B to its leaves) -->
+  <g fill="none" stroke="#10b981" stroke-width="1.5" marker-end="url(#arr-shared)">
+    <path d="M 595 224 L 535 300"/>
+    <path d="M 595 224 L 675 300"/>
+  </g>
+
+  <!-- Old root v1 -->
+  <g filter="url(#shadow)">
+    <rect x="120" y="46" width="120" height="54" rx="10" fill="#f1f5f9" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="5 4"/>
+  </g>
+  <text x="180" y="68" text-anchor="middle" font-size="11" font-weight="700" fill="#64748b" letter-spacing="1.5">ROOT v1</text>
+  <text x="180" y="86" text-anchor="middle" font-size="10" font-style="italic" fill="#94a3b8">old, will be reclaimed</text>
+
+  <!-- New root v2 -->
+  <g filter="url(#shadow)">
+    <rect x="460" y="46" width="120" height="54" rx="10" fill="#eef2ff" stroke="#6366f1" stroke-width="1.75"/>
+  </g>
+  <text x="520" y="68" text-anchor="middle" font-size="11" font-weight="700" fill="#4f46e5" letter-spacing="1.5">ROOT v2</text>
+  <text x="520" y="86" text-anchor="middle" font-size="10" font-style="italic" fill="#6366f1">new, atomically swapped</text>
+
+  <!-- Internal A (old) -->
+  <g filter="url(#shadow)">
+    <rect x="80" y="170" width="110" height="54" rx="10" fill="#f1f5f9" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="5 4"/>
+  </g>
+  <text x="135" y="192" text-anchor="middle" font-size="11" font-weight="700" fill="#64748b" letter-spacing="1.5">A</text>
+  <text x="135" y="210" text-anchor="middle" font-size="10" font-style="italic" fill="#94a3b8">old</text>
+
+  <!-- Internal A' (new) -->
+  <g filter="url(#shadow)">
+    <rect x="270" y="170" width="110" height="54" rx="10" fill="#eef2ff" stroke="#6366f1" stroke-width="1.75"/>
+  </g>
+  <text x="325" y="192" text-anchor="middle" font-size="11" font-weight="700" fill="#4f46e5" letter-spacing="1.5">A'</text>
+  <text x="325" y="210" text-anchor="middle" font-size="10" font-style="italic" fill="#6366f1">new copy</text>
+
+  <!-- Internal B (shared) -->
+  <g filter="url(#shadow)">
+    <rect x="540" y="170" width="110" height="54" rx="10" fill="#ecfdf5" stroke="#10b981" stroke-width="1.5"/>
+  </g>
+  <text x="595" y="192" text-anchor="middle" font-size="11" font-weight="700" fill="#059669" letter-spacing="1.5">B</text>
+  <text x="595" y="210" text-anchor="middle" font-size="10" font-style="italic" fill="#10b981">shared, unchanged</text>
+
+  <!-- Leaf C (shared) -->
+  <g filter="url(#shadow)">
+    <rect x="20" y="300" width="110" height="54" rx="10" fill="#ecfdf5" stroke="#10b981" stroke-width="1.5"/>
+  </g>
+  <text x="75" y="322" text-anchor="middle" font-size="11" font-weight="700" fill="#059669" letter-spacing="1.5">LEAF C</text>
+  <text x="75" y="340" text-anchor="middle" font-size="10" font-style="italic" fill="#10b981">shared</text>
+
+  <!-- Leaf D (old) -->
+  <g filter="url(#shadow)">
+    <rect x="160" y="300" width="110" height="54" rx="10" fill="#f1f5f9" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="5 4"/>
+  </g>
+  <text x="215" y="322" text-anchor="middle" font-size="11" font-weight="700" fill="#64748b" letter-spacing="1.5">LEAF D</text>
+  <text x="215" y="340" text-anchor="middle" font-size="10" font-style="italic" fill="#94a3b8">old</text>
+
+  <!-- Leaf D' (new copy) -->
+  <g filter="url(#shadow)">
+    <rect x="300" y="300" width="110" height="54" rx="10" fill="#eef2ff" stroke="#6366f1" stroke-width="1.75"/>
+  </g>
+  <text x="355" y="322" text-anchor="middle" font-size="11" font-weight="700" fill="#4f46e5" letter-spacing="1.5">LEAF D'</text>
+  <text x="355" y="340" text-anchor="middle" font-size="10" font-style="italic" fill="#6366f1">new copy</text>
+
+  <!-- Leaf E (shared) -->
+  <g filter="url(#shadow)">
+    <rect x="480" y="300" width="110" height="54" rx="10" fill="#ecfdf5" stroke="#10b981" stroke-width="1.5"/>
+  </g>
+  <text x="535" y="322" text-anchor="middle" font-size="11" font-weight="700" fill="#059669" letter-spacing="1.5">LEAF E</text>
+  <text x="535" y="340" text-anchor="middle" font-size="10" font-style="italic" fill="#10b981">shared</text>
+
+  <!-- Leaf F (shared) -->
+  <g filter="url(#shadow)">
+    <rect x="620" y="300" width="110" height="54" rx="10" fill="#ecfdf5" stroke="#10b981" stroke-width="1.5"/>
+  </g>
+  <text x="675" y="322" text-anchor="middle" font-size="11" font-weight="700" fill="#059669" letter-spacing="1.5">LEAF F</text>
+  <text x="675" y="340" text-anchor="middle" font-size="10" font-style="italic" fill="#10b981">shared</text>
+
+  <!-- Legend -->
+  <g font-size="11" fill="#475569">
+    <rect x="80"  y="395" width="22" height="14" rx="3" fill="#eef2ff" stroke="#6366f1" stroke-width="1.5"/>
+    <text x="110" y="406">new pages (just written)</text>
+
+    <rect x="280" y="395" width="22" height="14" rx="3" fill="#f1f5f9" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="5 4"/>
+    <text x="310" y="406">old pages (garbage, reclaim later)</text>
+
+    <rect x="560" y="395" width="22" height="14" rx="3" fill="#ecfdf5" stroke="#10b981" stroke-width="1.5"/>
+    <text x="590" y="406">shared pages (reused)</text>
+  </g>
+
+  <!-- Caption -->
+  <text x="400" y="438" text-anchor="middle" font-size="12" fill="#475569" font-style="italic">
+    Only the path from the modified leaf up to the root gets new copies; everything else is reused.
+  </text>
+</svg>
