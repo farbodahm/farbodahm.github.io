@@ -1,0 +1,87 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 280" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif">
+  <defs>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="130%">
+      <feDropShadow dx="0" dy="2" stdDeviation="2" flood-color="#0f172a" flood-opacity="0.08"/>
+    </filter>
+    <marker id="arr-sib" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#ea580c"/>
+    </marker>
+    <marker id="arr-stop" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#94a3b8"/>
+    </marker>
+  </defs>
+
+  <text x="400" y="28" text-anchor="middle" font-size="13" font-weight="700" fill="#475569" letter-spacing="1.5">RANGE SCAN: keys in [14, 28]</text>
+
+  <!-- Leaf A (untouched) -->
+  <g filter="url(#shadow)">
+    <rect x="20" y="80" width="170" height="100" rx="10" fill="#f1f5f9" stroke="#cbd5e1" stroke-width="1.5"/>
+  </g>
+  <text x="105" y="102" text-anchor="middle" font-size="11" font-weight="700" fill="#94a3b8" letter-spacing="1.5">LEAF A</text>
+  <g text-anchor="middle" font-size="14" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" fill="#94a3b8">
+    <text x="55"  y="148">1</text>
+    <text x="105" y="148">5</text>
+    <text x="155" y="148">8</text>
+  </g>
+
+  <!-- Leaf B (partial scan: 14, 17 in range) -->
+  <g filter="url(#shadow)">
+    <rect x="215" y="80" width="170" height="100" rx="10" fill="#ecfdf5" stroke="#10b981" stroke-width="1.5"/>
+  </g>
+  <text x="300" y="102" text-anchor="middle" font-size="11" font-weight="700" fill="#059669" letter-spacing="1.5">LEAF B</text>
+  <text x="250" y="148" text-anchor="middle" font-size="14" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" fill="#94a3b8">11</text>
+  <rect x="282" y="128" width="36" height="28" rx="6" fill="#fed7aa" stroke="#ea580c" stroke-width="1.5"/>
+  <text x="300" y="148" text-anchor="middle" font-size="14" font-weight="700" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" fill="#9a3412">14</text>
+  <rect x="332" y="128" width="36" height="28" rx="6" fill="#fed7aa" stroke="#ea580c" stroke-width="1.5"/>
+  <text x="350" y="148" text-anchor="middle" font-size="14" font-weight="700" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" fill="#9a3412">17</text>
+
+  <!-- Leaf C (full scan: 21, 24, 27 in range) -->
+  <g filter="url(#shadow)">
+    <rect x="410" y="80" width="170" height="100" rx="10" fill="#ecfdf5" stroke="#10b981" stroke-width="1.5"/>
+  </g>
+  <text x="495" y="102" text-anchor="middle" font-size="11" font-weight="700" fill="#059669" letter-spacing="1.5">LEAF C</text>
+  <rect x="427" y="128" width="36" height="28" rx="6" fill="#fed7aa" stroke="#ea580c" stroke-width="1.5"/>
+  <text x="445" y="148" text-anchor="middle" font-size="14" font-weight="700" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" fill="#9a3412">21</text>
+  <rect x="477" y="128" width="36" height="28" rx="6" fill="#fed7aa" stroke="#ea580c" stroke-width="1.5"/>
+  <text x="495" y="148" text-anchor="middle" font-size="14" font-weight="700" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" fill="#9a3412">24</text>
+  <rect x="527" y="128" width="36" height="28" rx="6" fill="#fed7aa" stroke="#ea580c" stroke-width="1.5"/>
+  <text x="545" y="148" text-anchor="middle" font-size="14" font-weight="700" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" fill="#9a3412">27</text>
+
+  <!-- Leaf D (stop) -->
+  <g filter="url(#shadow)">
+    <rect x="605" y="80" width="170" height="100" rx="10" fill="#f1f5f9" stroke="#cbd5e1" stroke-width="1.5"/>
+  </g>
+  <text x="690" y="102" text-anchor="middle" font-size="11" font-weight="700" fill="#94a3b8" letter-spacing="1.5">LEAF D</text>
+  <g text-anchor="middle" font-size="14" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" fill="#94a3b8">
+    <text x="640" y="148">31</text>
+    <text x="690" y="148">35</text>
+    <text x="740" y="148">39</text>
+  </g>
+
+  <!-- Sibling pointer arrows (orange, dashed where active) -->
+  <g fill="none" stroke="#ea580c" stroke-width="2.25" stroke-dasharray="6 4" marker-end="url(#arr-sib)">
+    <path d="M 385 130 L 410 130"/>
+  </g>
+  <g fill="none" stroke="#cbd5e1" stroke-width="2" stroke-dasharray="6 4" marker-end="url(#arr-stop)">
+    <path d="M 190 130 L 215 130"/>
+    <path d="M 580 130 L 605 130"/>
+  </g>
+
+  <!-- Start marker -->
+  <g>
+    <line x1="300" y1="78" x2="300" y2="68" stroke="#9a3412" stroke-width="1.5"/>
+    <text x="300" y="58" text-anchor="middle" font-size="11" font-weight="700" fill="#9a3412">start: 14</text>
+  </g>
+
+  <!-- Stop marker -->
+  <g>
+    <circle cx="640" cy="200" r="11" fill="#fef2f2" stroke="#dc2626" stroke-width="1.5"/>
+    <text x="640" y="204" text-anchor="middle" font-size="11" font-weight="700" fill="#dc2626">!</text>
+    <text x="640" y="232" text-anchor="middle" font-size="11" font-weight="700" fill="#dc2626">stop: 31 &gt; 28</text>
+  </g>
+
+  <!-- Caption -->
+  <text x="400" y="266" text-anchor="middle" font-size="12" fill="#475569" font-style="italic">
+    Once positioned, the scan walks the sibling chain and halts at the first key past the upper bound.
+  </text>
+</svg>

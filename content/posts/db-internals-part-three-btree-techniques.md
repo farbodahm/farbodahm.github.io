@@ -28,30 +28,7 @@ A range scan from `14` to `28` finds its starting position in `Leaf B`, then fol
 
 This is actually what turns a B-Tree into a B+Tree. Most database implementations use this. PostgreSQL, MySQL's InnoDB, SQLite, they all keep forward pointers in their leaf nodes. I also added this to [VeryLightSQL](https://github.com/farbodahm/verylightsql) early on, since range queries would be painful without it.
 
-```python
-class LeafNode:
-    def __init__(self):
-        self.keys = []
-        self.values = []
-        self.next_leaf = None 
-
-def range_scan(start_node, start_idx, end_key):
-    """Scan from a starting position until we pass end_key."""
-    results = []
-    node = start_node
-    idx = start_idx
-
-    while node is not None:
-        while idx < len(node.keys):
-            if node.keys[idx] > end_key:
-                return results
-            results.append((node.keys[idx], node.values[idx]))
-            idx += 1
-        node = node.next_leaf
-        idx = 0
-
-    return results
-```
+![Range scan walks the sibling chain from the starting key until it passes the upper bound](/images/btree-range-scan.svg)
 
 The scan just walks the linked list. No parent lookups, no re-traversals.
 
@@ -100,33 +77,7 @@ Rebalancing is a less aggressive alternative. Instead of immediately merging, yo
 
 You only merge when neither sibling can spare a key. This reduces the number of structural changes and can cut down on disk writes.
 
-```python
-def rebalance_or_merge(parent, child_idx, child):
-    min_keys = 2  # minimum keys per node
-
-    if len(child.keys) >= min_keys:
-        return  # node is fine
-
-    # Try borrowing from right sibling
-    if child_idx < len(parent.keys):
-        right_sibling = parent.children[child_idx + 1] if child_idx + 1 < len(parent.children) else parent.rightmost
-        if len(right_sibling.keys) > min_keys:
-            # Rotate: parent key goes to child, sibling's first key goes to parent
-            child.keys.append(parent.keys[child_idx])
-            parent.keys[child_idx] = right_sibling.keys.pop(0)
-            return
-
-    # Try borrowing from left sibling
-    if child_idx > 0:
-        left_sibling = parent.children[child_idx - 1]
-        if len(left_sibling.keys) > min_keys:
-            child.keys.insert(0, parent.keys[child_idx - 1])
-            parent.keys[child_idx - 1] = left_sibling.keys.pop()
-            return
-
-    # Neither sibling can spare a key, merge instead
-    merge(parent, child_idx, child)
-```
+![Rotation: a separator key drops from the parent into the underfull child, and the sibling's first key lifts up to take its place](/images/btree-rebalance.svg)
 
 The rotation keeps both nodes above the minimum key count. Merging is the last resort.
 
@@ -154,47 +105,7 @@ Another form is page-level compression, where the entire page gets compressed be
 
 WiredTiger (MongoDB's storage engine) supports both prefix compression for keys and block compression (using snappy or zlib) for pages.
 
-```python
-def prefix_compress(keys):
-    """Compress a sorted list of keys by storing shared prefixes once."""
-    if not keys:
-        return []
-
-    compressed = [keys[0]]  # first key stored in full
-
-    for i in range(1, len(keys)):
-        prev = keys[i - 1]
-        curr = keys[i]
-
-        # Find the length of the common prefix
-        common = 0
-        while common < len(prev) and common < len(curr) and prev[common] == curr[common]:
-            common += 1
-
-        compressed.append((common, curr[common:]))  # (prefix_length, suffix)
-
-    return compressed
-
-def prefix_decompress(compressed):
-    """Decompress back to full keys."""
-    if not compressed:
-        return []
-
-    keys = [compressed[0]]
-
-    for prefix_len, suffix in compressed[1:]:
-        full_key = keys[-1][:prefix_len] + suffix
-        keys.append(full_key)
-
-    return keys
-
-
-# Example
-keys = ["user:1001", "user:1002", "user:1003", "user:1234"]
-compressed = prefix_compress(keys)
-# Result: ['user:1001', (9, '2'), (9, '3'), (6, '234')]
-# 'user:1001' shares 9 chars with 'user:1002', so we store (9, '2')
-```
+![Prefix compression: each key stores only the suffix that differs from the previous one](/images/btree-prefix-compression.svg)
 
 The compressed form is much smaller, especially when keys are clustered, which they usually are in sorted trees.
 
@@ -204,5 +115,3 @@ The compressed form is much smaller, especially when keys are clustered, which t
 None of these techniques exist in isolation. A real B-Tree implementation will use several of them together. You might have sibling links for range scans, overflow pages for large values, breadcrumbs for traversal, and prefix compression to squeeze more keys per node. The combination depends on your workload and what problems you're actually hitting.
 
 The main takeaway: these are *techniques*, not rules. They're tools sitting on a shelf. You pick the ones that solve the problems you have and leave the rest. Different databases make different choices here, and that's fine. Understanding what each technique does and when it helps puts you in a much better position to reason about why a particular database behaves the way it does.
-
-If you're interested in going deeper, Chapter 4 of [Database Internals](https://www.databass.dev/) covers these and more, including vacuum and maintenance strategies that I didn't cover here.
