@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 360" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif">
+  <defs>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="130%">
+      <feDropShadow dx="0" dy="2" stdDeviation="2" flood-color="#0f172a" flood-opacity="0.08"/>
+    </filter>
+    <marker id="arr-tree" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#94a3b8"/>
+    </marker>
+    <marker id="arr-sib" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#ea580c"/>
+    </marker>
+  </defs>
+
+  <!-- Root -->
+  <g filter="url(#shadow)">
+    <rect x="320" y="30" width="160" height="64" rx="10" fill="#eef2ff" stroke="#6366f1" stroke-width="1.5"/>
+  </g>
+  <text x="400" y="52" text-anchor="middle" font-size="11" font-weight="700" fill="#4f46e5" letter-spacing="1.5">ROOT</text>
+  <text x="400" y="78" text-anchor="middle" font-size="15" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" fill="#1e293b">10 · 20 · 30</text>
+
+  <!-- Leaves -->
+  <g filter="url(#shadow)">
+    <rect x="30"  y="232" width="160" height="80" rx="10" fill="#ecfdf5" stroke="#10b981" stroke-width="1.5"/>
+    <rect x="222" y="232" width="160" height="80" rx="10" fill="#ecfdf5" stroke="#10b981" stroke-width="1.5"/>
+    <rect x="414" y="232" width="160" height="80" rx="10" fill="#ecfdf5" stroke="#10b981" stroke-width="1.5"/>
+    <rect x="606" y="232" width="160" height="80" rx="10" fill="#ecfdf5" stroke="#10b981" stroke-width="1.5"/>
+  </g>
+  <g font-size="11" font-weight="700" fill="#059669" text-anchor="middle" letter-spacing="1.5">
+    <text x="110" y="256">LEAF A</text>
+    <text x="302" y="256">LEAF B</text>
+    <text x="494" y="256">LEAF C</text>
+    <text x="686" y="256">LEAF D</text>
+  </g>
+  <g font-size="15" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" fill="#1e293b" text-anchor="middle">
+    <text x="110" y="288">1 · 5 · 8</text>
+    <text x="302" y="288">11 · 14 · 17</text>
+    <text x="494" y="288">21 · 24 · 27</text>
+    <text x="686" y="288">31 · 35 · 39</text>
+  </g>
+
+  <!-- Tree edges -->
+  <g fill="none" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#arr-tree)">
+    <path d="M 350 94 C 280 150, 170 200, 110 230"/>
+    <path d="M 380 94 C 360 150, 318 200, 302 230"/>
+    <path d="M 420 94 C 440 150, 478 200, 494 230"/>
+    <path d="M 450 94 C 520 150, 626 200, 686 230"/>
+  </g>
+
+  <!-- Sibling links between leaves -->
+  <g fill="none" stroke="#ea580c" stroke-width="2.25" stroke-dasharray="6 4" marker-end="url(#arr-sib)">
+    <path d="M 190 272 L 220 272"/>
+    <path d="M 382 272 L 412 272"/>
+    <path d="M 574 272 L 604 272"/>
+  </g>
+
+  <!-- Caption -->
+  <g font-size="12" fill="#475569">
+    <line x1="290" y1="338" x2="320" y2="338" stroke="#ea580c" stroke-width="2.25" stroke-dasharray="6 4"/>
+    <text x="328" y="342">sibling pointer: walk a range scan without going back to the root</text>
+  </g>
+</svg>

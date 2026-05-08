@@ -1,0 +1,72 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 380" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif">
+  <defs>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="130%">
+      <feDropShadow dx="0" dy="2" stdDeviation="2" flood-color="#0f172a" flood-opacity="0.08"/>
+    </filter>
+    <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#ea580c"/>
+    </marker>
+  </defs>
+
+  <!-- Leaf page -->
+  <g filter="url(#shadow)">
+    <rect x="40" y="40" width="400" height="280" rx="12" fill="#ecfdf5" stroke="#10b981" stroke-width="1.5"/>
+  </g>
+  <text x="60" y="62" font-size="11" font-weight="700" fill="#059669" letter-spacing="1.5">LEAF PAGE (fixed 4KB)</text>
+
+  <!-- Row separators (light) -->
+  <g stroke="#a7f3d0" stroke-width="1">
+    <line x1="60" y1="82" x2="420" y2="82"/>
+    <line x1="60" y1="138" x2="420" y2="138"/>
+    <line x1="60" y1="194" x2="420" y2="194"/>
+    <line x1="60" y1="250" x2="420" y2="250"/>
+    <line x1="60" y1="306" x2="420" y2="306"/>
+    <line x1="180" y1="82" x2="180" y2="306"/>
+  </g>
+
+  <!-- Row 1: alice -->
+  <text x="120" y="115" text-anchor="middle" font-size="14" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" fill="#1e293b">alice</text>
+  <text x="300" y="115" text-anchor="middle" font-size="14" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" fill="#1e293b">"hello"</text>
+
+  <!-- Row 2: bob -->
+  <text x="120" y="171" text-anchor="middle" font-size="14" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" fill="#1e293b">bob</text>
+  <text x="300" y="171" text-anchor="middle" font-size="14" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" fill="#1e293b">"world"</text>
+
+  <!-- Row 3: carol (overflow) -->
+  <rect x="60" y="194" width="360" height="56" fill="#fff7ed"/>
+  <text x="120" y="227" text-anchor="middle" font-size="14" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" fill="#1e293b">carol</text>
+  <text x="300" y="227" text-anchor="middle" font-size="13" font-weight="700" fill="#c2410c" letter-spacing="0.5">overflow ptr ▸</text>
+
+  <!-- Row 4: dave -->
+  <text x="120" y="283" text-anchor="middle" font-size="14" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" fill="#1e293b">dave</text>
+  <text x="300" y="283" text-anchor="middle" font-size="14" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" fill="#1e293b">"small"</text>
+
+  <!-- Overflow page -->
+  <g filter="url(#shadow)">
+    <rect x="540" y="120" width="220" height="180" rx="12" fill="#fff7ed" stroke="#f97316" stroke-width="1.5"/>
+  </g>
+  <text x="560" y="142" font-size="11" font-weight="700" fill="#c2410c" letter-spacing="1.5">OVERFLOW PAGE</text>
+
+  <!-- Blob bars to suggest big payload -->
+  <g fill="#fed7aa">
+    <rect x="560" y="158" width="180" height="10" rx="2"/>
+    <rect x="560" y="174" width="160" height="10" rx="2"/>
+    <rect x="560" y="190" width="180" height="10" rx="2"/>
+    <rect x="560" y="206" width="140" height="10" rx="2"/>
+    <rect x="560" y="222" width="170" height="10" rx="2"/>
+    <rect x="560" y="238" width="120" height="10" rx="2"/>
+    <rect x="560" y="254" width="180" height="10" rx="2"/>
+    <rect x="560" y="270" width="100" height="10" rx="2"/>
+  </g>
+  <text x="650" y="296" text-anchor="middle" font-size="11" font-style="italic" fill="#9a3412">large value (blob, long text, image)</text>
+
+  <!-- Arrow from overflow ptr to overflow page -->
+  <g fill="none" stroke="#ea580c" stroke-width="2.25" marker-end="url(#arr)">
+    <path d="M 380 222 C 460 222, 480 200, 540 200"/>
+  </g>
+
+  <!-- Caption -->
+  <text x="400" y="358" text-anchor="middle" font-size="12" fill="#475569" font-style="italic">
+    The leaf page stays a predictable size; oversized values live on a separate overflow page.
+  </text>
+</svg>
