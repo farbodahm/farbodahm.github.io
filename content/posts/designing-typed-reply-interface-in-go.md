@@ -275,3 +275,5 @@ The cost: rename `BodyCommon.MsgID` to `BodyCommon.MessageID` and the code still
 ## Wrapping up
 
 This is the kind of problem where each approach is locally cleaner than the others depending on what you're optimizing for. Approach 1 keeps types end to end. Approach 2 keeps function count low. Approach 3 keeps both with generics. Approach 4 keeps both without generics, by moving the field check from compile time to runtime.
+
+You can find the full code in [this PR](https://github.com/farbodahm/build-distributed-systems/pull/1/).
