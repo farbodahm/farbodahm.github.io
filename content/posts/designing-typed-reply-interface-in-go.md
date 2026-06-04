@@ -271,6 +271,24 @@ Reply(msg, &EchoOkBody{
 
 The cost: rename `BodyCommon.MsgID` to `BodyCommon.MessageID` and the code still compiles, still runs, just silently fails to populate the field. The risk is narrower than it sounds (it's one struct, not per-body), but the compiler can't help you catch it. You catch it at the grader.
 
+## What about sum types?
+
+The natural follow-up: "Why not sum types?" Go doesn't have them as a language feature. The common workaround is the sealed interface pattern: you define an interface with an unexported method, and only types in your own package can implement it. For a longer read on this, see Jamie Brandon's [Columnar kernels in Go](https://www.scattered-thoughts.net/writing/columnar-kernels-in-go/).
+
+The reason sum types didn't show up in this post is that they solve a different problem. Reply is **1:1**: `InitMessage` maps to `InitOk`, `EchoMessage` to `EchoOk`, deterministically. Sum types shine when you have **1:N**: one incoming line could be any of N typed messages, and you need to dispatch on which one arrived.
+
+Dispatch then looks like:
+
+```go
+switch m := msg.(type) {
+case InitMessage:
+    node.Reply(m, &InitOkBody{})
+case EchoMessage:
+    node.Reply(m, &EchoOkBody{Echo: m.Body.Echo})
+}
+```
+
+That dispatch problem is the next thing I'll hit, the moment I write a node that handles mixed traffic (gossip, broadcast, ack). 
 
 ## Wrapping up
 
