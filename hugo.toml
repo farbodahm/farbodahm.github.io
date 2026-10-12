@@ -22,6 +22,11 @@ copyright = 'Farbod Ahmadian'
     url = "/posts/"
     weight = -200
   [[menu.main]]
+    identifier = "blogs-i-like"
+    name = "Blogs I Like"
+    url = "/blogs-i-like/"
+    weight = -175
+  [[menu.main]]
     identifier = "rss"
     name = "RSS"
     url = "/index.xml"
