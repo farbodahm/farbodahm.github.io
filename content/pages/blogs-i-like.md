@@ -8,6 +8,7 @@ So starting October 2026, I'm adding this page to my blog to make it easy to sha
 
 Note: I link to specific posts here. That doesn't necessarily mean I agree with all of the author's opinions or everything they've written.
 
+{{< liked-posts >}}
 - A Staff Engineer's Guide to Inventing Work: https://sujithjay.com/inventing-work
 - How to solve hard problems: https://opeonikute.dev/posts/how-to-solve-hard-problems
 - How to keep enjoying programming in a world of LLMs: https://discourse.haskell.org/t/how-to-keep-enjoying-programming-in-a-world-of-llms/14705
@@ -18,3 +19,4 @@ Note: I link to specific posts here. That doesn't necessarily mean I agree with 
 - Broken Ownership: https://blog.alexewerlof.com/p/broken-ownership
 - You build it, you own it: https://blog.alexewerlof.com/p/you-build-it-you-own-it
 - The Law of Leaky Abstractions: https://www.joelonsoftware.com/2002/11/11/the-law-of-leaky-abstractions/
+{{< /liked-posts >}}
