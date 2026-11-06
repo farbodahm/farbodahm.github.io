@@ -1,0 +1,79 @@
+{{- /*
+  Renders a list of liked posts. Each line inside the shortcode is "- Title: URL".
+  Every entry gets an anchor derived from its title; clicking the title copies
+  a link to that entry on this page, so it can be shared.
+*/ -}}
+{{- $re := `^\s*[-*]\s+(.+?):\s+(https?://\S+)\s*$` -}}
+<ul class="liked-posts">
+{{- range split (trim .Inner "\n") "\n" }}
+  {{- with findRESubmatch $re . 1 }}
+    {{- $title := index (index . 0) 1 }}
+    {{- $url := index (index . 0) 2 }}
+    {{- $id := anchorize $title }}
+  <li id="{{ $id }}">
+    <a class="liked-post-title" href="#{{ $id }}" title="Copy link to this post">{{ $title }}</a>:
+    <a href="{{ $url }}">{{ $url }}</a>
+    <span class="liked-post-copied" aria-live="polite"></span>
+  </li>
+  {{- else }}
+    {{- if trim . " \t\r" }}
+      {{- errorf "liked-posts: can't parse line %q in %s (expected \"- Title: URL\")" . $.Page.File.Path }}
+    {{- end }}
+  {{- end }}
+{{- end }}
+</ul>
+<style>
+  .liked-posts li {
+    scroll-margin-top: 1em;
+    padding: 0.15em 0.4em;
+    margin-left: -0.4em;
+    border-radius: 4px;
+    transition: background-color 0.4s;
+  }
+  .liked-posts li:target,
+  .liked-posts li.is-target {
+    background-color: #fff3b0;
+  }
+  .liked-posts a.liked-post-title {
+    font-weight: 600;
+    text-decoration: none;
+    cursor: copy;
+  }
+  .liked-posts a.liked-post-title:hover {
+    text-decoration: underline;
+  }
+  .liked-post-copied {
+    margin-left: 0.4em;
+    font-size: 0.85em;
+    color: #888;
+  }
+</style>
+<script>
+(function () {
+  var list = document.querySelector('ul.liked-posts');
+
+  function highlight(li) {
+    list.querySelectorAll('li.is-target').forEach(function (el) { el.classList.remove('is-target'); });
+    if (li) li.classList.add('is-target');
+  }
+
+  list.querySelectorAll('a.liked-post-title').forEach(function (a) {
+    a.addEventListener('click', function (e) {
+      var li = a.closest('li');
+      var link = location.origin + location.pathname + '#' + li.id;
+      if (!navigator.clipboard) return; // fall back to plain anchor navigation
+      e.preventDefault();
+      navigator.clipboard.writeText(link).then(function () {
+        history.replaceState(null, '', '#' + li.id);
+        highlight(li);
+        var note = li.querySelector('.liked-post-copied');
+        note.textContent = 'Link copied!';
+        clearTimeout(note._t);
+        note._t = setTimeout(function () { note.textContent = ''; }, 2000);
+      }, function () {
+        location.hash = li.id;
+      });
+    });
+  });
+})();
+</script>
